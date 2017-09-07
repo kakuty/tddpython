@@ -2,4 +2,4 @@ geckodriver
 geckodriver.log
 __pycache__
 *.pyc
-.vscode
+.vscodedb.sqlite3
