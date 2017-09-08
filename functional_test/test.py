@@ -86,7 +86,7 @@ class TodoTest(LiveServerTestCase):
         self.assertNotEqual(unique_list_url, new_unique_list_url)
 
         # Test to make sure there are no traces from prevous user's list
-        page_text = self.browser.find_element_by_tag_name('body')
+        page_text = self.browser.find_element_by_tag_name('body').text
         self.assertNotIn('Buy coffee', page_text)
         self.assertIn('Buy milk', page_text)
 
