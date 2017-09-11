@@ -13,6 +13,9 @@ class TodoTest(StaticLiveServerTestCase):
     def setUp(self):
         self.browser = webdriver.Firefox(
             executable_path=os.path.join(os.getcwd(), 'geckodriver'))
+        staging_server = os.environ.get('STAGING_SERVER')
+        if staging_server:
+            self.live_server_url = 'http://' + staging_server
 
     def tearDown(self):
         self.browser.quit()
