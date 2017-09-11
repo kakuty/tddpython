@@ -5,7 +5,7 @@
 {% endblock header_text %}
 
 {% block action_form %}
-    /lists/{{ list.id}}/
+    {% url 'view_list' list.id %}
 {% endblock action_form %}
 
 

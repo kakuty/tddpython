@@ -11,11 +11,11 @@ def view_list(request, list_id):
     error = None
     if request.method == 'POST':
         try:
-            item = Item.objects.create(text=request.POST['new_item'], list=list_)
+            item = Item(text=request.POST['new_item'], list=list_)
             item.full_clean()
             item.save()
             return redirect(f'/lists/{list_.id}/')
-        except ValidationError as e:
+        except ValidationError:
             error = "You can't have an empty list item"
 
     return render(request, 'list.html', {'list': list_, 'error': error})
@@ -26,7 +26,7 @@ def new_list(request):
     try:
         item.full_clean()
         item.save()
-    except ValidationError as e:
+    except ValidationError:
         list_.delete()
         error = "You can't have an empty list item"
         return render(request, 'home.html', {'error': error})
