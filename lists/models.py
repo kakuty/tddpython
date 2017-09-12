@@ -17,3 +17,6 @@ class Item(models.Model):
 
     def __unicode__(self):
         return 
+
+    class Meta:
+        unique_together = ('list', 'text')
