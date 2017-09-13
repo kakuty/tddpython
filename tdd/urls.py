@@ -15,8 +15,10 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from lists import views, urls
+from accounts import urls as accounts_urls
 
 urlpatterns = [
     url(r'^$', views.HomePageView.as_view(), name='home'),
     url(r'^lists/', include(urls)),
+    url(r'^accounts/', include(accounts_urls)),
 ]
