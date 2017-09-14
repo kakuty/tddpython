@@ -1,15 +1,18 @@
-from django.test import TestCase
-from django.urls import resolve
+
+import unittest
+from unittest.mock import patch, Mock
+from django.contrib.auth import get_user_model
 from django.http import HttpRequest
-from django.template.loader import render_to_string
+from django.test import TestCase
 from django.utils.html import escape
 
-from unittest import skip
-
-from lists.views import home_page
+from lists.forms import (
+    DUPLICATE_ITEM_ERROR, EMPTY_ITEM_ERROR,
+    ExistingListItemForm, ItemForm,
+)
 from lists.models import Item, List
-from lists.forms import ItemForm, EMPTY_ITEM_ERROR, ExistingListItemForm
-
+from lists.views import new_list
+User = get_user_model()
 
 class HomepageTest(TestCase):
     
@@ -145,9 +148,23 @@ class NewListTest(TestCase):
         )
         self.assertRedirects(response, f'/lists/{correct_list.id}/')
 
+    def test_list_owner_is_saved_if_user_is_authenticated(self):
+        user = User.objects.create(email='a@b.com')
+        self.client.force_login(user)
+        self.client.post('/lists/new', data={'text': 'new item'})
+        list_ = List.objects.first()
+        self.assertEqual(list_.owner, user)
+
 
 class MyListTest(TestCase):
 
     def test_my_lists_url_renders_my_lists_template(self):
+        User.objects.create(email='a@b.com')
         response = self.client.get(f'/lists/users/a@b.com/')
         self.assertTemplateUsed(response, 'my_lists.html')
+
+    def test_passes_correct_owner_to_template(self):
+        User.objects.create(email='wrong@owner.com')
+        correct_user = User.objects.create(email='a@b.com')
+        response = self.client.get('/lists/users/a@b.com/')
+        self.assertEqual(response.context['owner'], correct_user)
