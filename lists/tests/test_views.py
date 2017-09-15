@@ -16,9 +16,6 @@ from lists.models import Item, List
 from lists.views import new_list
 User = get_user_model()
 
-from unittest.mock import patch
-
-
 class HomepageTest(TestCase):
     
     def test_uses_home_template(self):

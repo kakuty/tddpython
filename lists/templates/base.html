@@ -55,7 +55,7 @@
                 <div class="text-center">
                     <h1>{% block header_text %}{% endblock %}</h1>
                     {% block list_form %}
-                        <form method="POST" action="{% block action_form %}{% endblock %}">
+                        <form id="id_item_form" method="POST" action="{% block action_form %}{% endblock %}">
                             {{ form.text }}
                             {% csrf_token %}
                             {% if form.errors %}
@@ -86,11 +86,14 @@
     </div>
     <script src="/static/jquery-3.2.1.js"></script>
     <script src="/static/list.js"></script>
-    <script>
-        $(document).ready(function(){
-            window.Superlists.initialize();
-        })
-    </script>
+    <script src="/static/list.js"></script>
+    {% block script %}
+        <script>
+            $(document).ready(function(){
+                window.Superlists.initialize();
+            })
+        </script>
+    {% endblock script %}
 </body>
 
 </html>
