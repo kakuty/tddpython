@@ -5,8 +5,9 @@ from django.contrib.auth import get_user_model
 from django.http import HttpRequest
 from django.test import TestCase
 from django.utils.html import escape
-from lists.views import new_list
+from django.shortcuts import reverse
 
+from lists.views import new_list
 from lists.forms import (
     DUPLICATE_ITEM_ERROR, EMPTY_ITEM_ERROR,
     ExistingListItemForm, ItemForm,
@@ -194,3 +195,27 @@ class NewListViewUnitTest(unittest.TestCase):
         mock_form.is_valid.return_value = False
         new_list(self.request)
         self.assertFalse(mock_form.save.called)
+
+
+class ShareListTest(TestCase):
+
+    def test_redirects_after_POST(self):
+        sharee = User.objects.create(email='someoneelse@example.com')
+        list_ = List.objects.create()
+        response = self.client.post(
+            f'/lists/{list_.id}/share',
+            data={'sharee': 'someoneelse@example.com'}
+        )
+
+        self.assertRedirects(response, list_.get_absolute_url())
+
+    def test_sharing_a_list_via_post(self):
+
+        sharee = User.objects.create(email='share.with.me@example.com')
+        list_ = List.objects.create()
+        self.client.post(
+            f'/lists/{list_.id}/share',
+            data={'sharee': 'share.with.me@example.com'}
+        )
+
+        self.assertIn(sharee, list_.shared_with.all())
