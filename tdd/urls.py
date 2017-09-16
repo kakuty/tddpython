@@ -16,9 +16,11 @@ Including another URLconf
 from django.conf.urls import url, include
 from lists import views, urls
 from accounts import urls as accounts_url
+from lists import api_urls
 
 urlpatterns = [
     url(r'^$', views.HomePageView.as_view(), name='home'),
     url(r'^lists/', include(urls)),
     url(r'^accounts/', include(accounts_url)),
+    url(r'^api/', include(api_urls)),
 ]
